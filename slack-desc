@@ -1,0 +1,13 @@
+
+        |-----handy-ruler------------------------------------------------------|
+lizardfs: GPLv3-licensed implementation of GoogleFS, with snapshots.
+lizardfs:
+lizardfs: LizardFS is FUSE-based, scalable, self-healing, self-replicating
+lizardfs: distributed filesystem that can be deployed on anything. With it's
+lizardfs: torrent-like replication scheme, LizardFS performance grows with the
+lizardfs: number of participating nodes (called chunk nodes). Chunk node can be
+lizardfs: any machine capable of running Linux, *BSD, MacOSX, or Windows.
+lizardfs:
+lizardfs: You can think of it as of NFS on steroids, with snapshot and web
+lizardfs: management console. It is a fork of MooseFS.
+lizardfs:

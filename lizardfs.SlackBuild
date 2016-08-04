@@ -1,0 +1,172 @@
+#!/bin/sh
+
+# Slackware build script for LizardFS
+
+# Copyright 2014 Marcin Szychowski <szycha@gmail.com>
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=lizardfs
+VERSION=${VERSION:-2.5.4-2}
+BUILD=${BUILD:-1}
+TAG=${TAG:-_SBo}
+
+if [ -z "$ARCH" ]; then
+  case "$( uname -m )" in
+    i?86) ARCH=i486 ;;
+    arm*) ARCH=arm ;;
+    # Unless $ARCH is already set, use uname -m for all other archs:
+       *) ARCH=$( uname -m ) ;;
+  esac
+fi
+
+CWD=$(pwd)
+TMP=${TMP:-/tmp/SBo}
+PKG=$TMP/package-$PRGNAM
+OUTPUT=${OUTPUT:-/tmp}
+
+if [ "$ARCH" = "i486" ]; then
+  SLKCFLAGS="-O2 -march=i486 -mtune=i686"
+  LIBDIRSUFFIX=""
+elif [ "$ARCH" = "i686" ]; then
+  SLKCFLAGS="-O2 -march=i686 -mtune=i686"
+  LIBDIRSUFFIX=""
+elif [ "$ARCH" = "x86_64" ]; then
+  SLKCFLAGS="-O2 -fPIC"
+  LIBDIRSUFFIX="64"
+else
+  SLKCFLAGS="-O2"
+  LIBDIRSUFFIX=""
+fi
+
+set -e # Exit on most errors
+
+rm -rf $PKG
+mkdir -p $TMP $PKG $OUTPUT
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvvf $CWD/$PRGNAM-$VERSION.tar.gz
+cd $PRGNAM-$VERSION
+chown -R root:root .
+find -L . \
+ \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
+  -o -perm 511 \) -exec chmod 755 {} \; -o \
+ \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
+ -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
+
+# There's no ./configure script in supplied .zip file
+# ./autogen.sh
+CFLAGS="$SLKCFLAGS" \
+CXXFLAGS="$SLKCFLAGS" \
+./configure \
+  --prefix=/usr \
+  --libdir=/usr/lib${LIBDIRSUFFIX} \
+  --sysconfdir=/etc \
+  --localstatedir=/var \
+  --mandir=/usr/man \
+  --docdir=/usr/doc/$PRGNAM-$VERSION \
+  --build=$ARCH-slackware-linux
+
+# Comment out next line if build fails, should self-heal though.
+make -j 5 || \
+make
+make install-strip DESTDIR=$PKG || make install DESTDIR=$PKG
+
+find $PKG/usr/share/man -type f -size +40c -exec xz -9 {} \;
+for i in $( find $PKG/usr/share/man -type l ) ; do ln -s $( readlink $i ).xz $i.xz ; rm $i ; done
+
+# Rename default config files to suite Slackware's conventions:
+for d in chunkserver exports goals hdd master metalogger mount topology; do
+  mv $PKG/etc/mfs/mfs$d.cfg.dist $PKG/etc/mfs/mfs$d.cfg.new
+done
+for l in '' global; do
+  mv $PKG/etc/mfs/${l}iolimits.cfg.dist $PKG/etc/mfs/${l}iolimits.cfg.new
+done
+
+# Copy Slackware-specific scripts:
+tail -40 $0 |base64 -d|xz -dc|(cd $PKG/; tar xf -)
+
+# Copy program documentation into the package
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION $PKG/var/log/setup
+cp -a \
+  COPYING INSTALL NEWS README UPGRADE \
+  $PKG/usr/doc/$PRGNAM-$VERSION
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+cat $CWD/README > $PKG/usr/doc/$PRGNAM-$VERSION/README.SBo
+
+mkdir -p $PKG/install
+cat $CWD/slack-desc > $PKG/install/slack-desc
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
+cp -a $CWD/setup.mfsservices $PKG/var/log/setup/setup.mfsservices
+
+cd $PKG
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+
+
+exit
+
+# Last 38 lines contain Slackware-sepecific scripts:
+
+# -rwxr-xr-x root/root      2366 2014-03-01 07:15 var/log/setup/setup.mfsservices.new
+# -rwxr-xr-x root/root      1683 2014-03-01 07:15 etc/rc.d/rc.mfs.new
+# -rw-r--r-- root/root      1212 2014-03-01 07:15 etc/rc.d/rc.mfscgiserv.new
+# -rwxr-xr-x root/root      1191 2014-03-01 07:15 etc/rc.d/rc.mfschunkserver.new
+# -rw-r--r-- root/root      1190 2014-03-01 07:15 etc/rc.d/rc.mfsmaster.new
+# -rw-r--r-- root/root      1223 2014-03-01 07:15 etc/rc.d/rc.mfsmetalogger.new
+
+
+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
+

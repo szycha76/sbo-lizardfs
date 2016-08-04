@@ -1,0 +1,41 @@
+LizardFS is a GPLv3-licensed implementation of GoogleFS, and a
+live fork of earlier project MooseFS, led by Gemius SA.
+
+One can think of LizardFS as a scalable NFS on steroid, that can be deployed
+on JBOA (Just a Bunch of Anything) - any mixture of workstations/servers (and
+soon also mobile devices), running Linux, BSD, MacOSX, and Windows, will do.
+
+Moreover it scales very well, as data is replicated point-to-point (just like
+in torrent software) and up to 9 (nine) copies of any chunk of data can be
+specified.  (Number of copies is set at file and directory level).  The system
+balances chunks of files among the machines, ensuring no machine suddenly runs
+out of storage space.  No need for similar machines, no need for similar-sized
+disks, just pick up what left after last power station failure and build a
+bullet-proof system for massive storage out of it!
+
+Although it is a fairly new project (forked circa 2012), it already has quite
+impressive number of huge installations worldwide, including (but not limited
+to): Harvard University, Mirada.com studios, and more.
+
+LizardFS system consists of:
+- managing server - single computer managing the whole filesystem,
+- meta-loggers - one or more backup machines for master server,
+- any number of data servers.
+
+Master server must be POSIX compliant (Linux, BSD, OSX, Windows+Cygwin etc.)
+and should be as good as budget permits.  Lots of RAM?  Yes, ECC.  SSDrives?
+Sure, RAID+BBU controlled.  Network card? 10Gbps interfaces, bonded together.
+Despite of beeing benchmark-crusher, it should not perform any unneeded
+activity whatsoever, as it could become a SPoF.
+
+Therefore at least one meta-logger should be deployed.  In order to be a quick
+drop-in replacement, meta-loggers should be fairly decent machines as well.
+
+The actual storage for one's precious data however, can be the last sort of
+what merely resembles contemporary computers, as chunkserver process hardly
+saturates one procesor core, even under full load.  Moreover chunkservers can
+act as any type of what-you-need, utilizing (having mounted) filesystem they
+are actually backing, being distributed webservers or even office space
+workstations.
+
+Project home page: http://lizardfs.org/
