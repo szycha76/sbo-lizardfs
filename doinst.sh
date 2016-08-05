@@ -24,8 +24,8 @@ config etc/mfs/globaliolimits.cfg.new
 config etc/mfs/iolimits.cfg.new
 config etc/mfs/mfsgoals.cfg.new
 
-config etc/rc.d/rc.mfs.new
-config etc/rc.d/rc.mfschunkserver.new
-config etc/rc.d/rc.mfscgiserv.new
-config etc/rc.d/rc.mfsmaster.new
-config etc/rc.d/rc.mfsmetalogger.new
+config etc/rc.d/rc.lizardfs.new
+config etc/rc.d/rc.lizardfs-chunkserver.new
+config etc/rc.d/rc.lizardfs-cgiserv.new
+config etc/rc.d/rc.lizardfs-master.new
+config etc/rc.d/rc.lizardfs-metalogger.new
