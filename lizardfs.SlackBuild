@@ -77,11 +77,11 @@ CXXFLAGS="$SLKCFLAGS" \
 make
 make install DESTDIR=$PKG
 (cd $PKG/usr/sbin; strip mfschunkserver mfsmaster mfsmetadump mfsmetalogger mfsmetarestore)
-(cd $PKG/usr/bin; strip lizardfs-admin mfsmount mfstools)
+(cd $PKG/usr/bin; strip lizardfs-admin mfsmount lizardfs)
 
 mv $PKG/usr/share/man $PKG/usr/
-find $PKG/usr/man -type f -size +40c -exec xz -1e {} \;
-for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).xz $i.xz ; rm $i ; done
+find $PKG/usr/share/man -type f -size +40c -exec xz -1e {} \;
+for i in $( find $PKG/usr/share/man -type l ) ; do ln -s $( readlink $i ).xz $i.xz ; rm $i ; done
 
 # Rename default config files to suite Slackware's conventions:
 for d in chunkserver exports goals hdd master metalogger mount topology; do
@@ -102,7 +102,7 @@ cp -a $CWD/setup.lizardfs-services.new $PKG/var/log/setup/
 # Copy program documentation into the package
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a \
-  COPYING INSTALL NEWS README UPGRADE ReleaseNotes \
+  COPYING INSTALL NEWS README.md UPGRADE ReleaseNotes \
   $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 cat $CWD/README > $PKG/usr/doc/$PRGNAM-$VERSION/README.SBo
