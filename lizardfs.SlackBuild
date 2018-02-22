@@ -60,9 +60,9 @@ set -e # Exit on most errors
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-rm -rf $PRGNAM-v.$VERSION
-tar xvvf $CWD/v.$VERSION.tar.gz
-cd $PRGNAM-v.$VERSION
+rm -rf $PRGNAM-$VERSION
+tar xvvf $CWD/v$VERSION.tar.gz
+cd $PRGNAM-$VERSION
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -74,7 +74,6 @@ CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 ./configure
 
-# Comment out next line if build fails, should self-heal though.
 make
 make install DESTDIR=$PKG
 (cd $PKG/usr/sbin; strip mfschunkserver mfsmaster mfsmetadump mfsmetalogger mfsmetarestore)
@@ -93,10 +92,15 @@ for l in '' global; do
 done
 
 # Copy Slackware-specific scripts:
-tail -40 $0 |base64 -d|xz -dc|(cd $PKG/; tar xf -)
+#tail -40 $CWD/$PRGNAM.SlackBuild |base64 -d|xz -dc|(cd $PKG/; tar xf -)
+mkdir -p $PKG/etc/rc.d $PKG/var/log/setup
+cp -a $CWD/rc.lizardfs-cgiserv.new $CWD/rc.lizardfs-chunkserver.new \
+  $CWD/rc.lizardfs-master.new $CWD/rc.lizardfs-metalogger.new \
+  $CWD/rc.lizardfs.new $PKG/etc/rc.d/
+cp -a $CWD/setup.lizardfs-services.new $PKG/var/log/setup/
 
 # Copy program documentation into the package
-mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION $PKG/var/log/setup
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a \
   COPYING INSTALL NEWS README UPGRADE ReleaseNotes \
   $PKG/usr/doc/$PRGNAM-$VERSION
@@ -106,7 +110,6 @@ cat $CWD/README > $PKG/usr/doc/$PRGNAM-$VERSION/README.SBo
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
 cat $CWD/doinst.sh > $PKG/install/doinst.sh
-cp -a $CWD/setup.mfsservices $PKG/var/log/setup/setup.mfsservices
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
@@ -127,45 +130,12 @@ exit
 
 
 
+   setup.lizardfs-services.new
 
+   rc.lizardfs-cgiserv.new
+   rc.lizardfs-chunkserver.new
+   rc.lizardfs-master.new
+   rc.lizardfs-metalogger.new
+   rc.lizardfs.new
+   setup.lizardfs-services.new
 
-
-
-
-
-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

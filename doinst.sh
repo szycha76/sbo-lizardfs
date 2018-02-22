@@ -29,3 +29,5 @@ config etc/rc.d/rc.lizardfs-chunkserver.new
 config etc/rc.d/rc.lizardfs-cgiserv.new
 config etc/rc.d/rc.lizardfs-master.new
 config etc/rc.d/rc.lizardfs-metalogger.new
+
+config var/log/setup/setup.lizardfs-services.new
