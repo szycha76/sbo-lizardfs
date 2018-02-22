@@ -3,7 +3,7 @@
 set -e
 wd=$(mktemp -d)
 mkdir -pv $wd/lizardfs
-cat  << EOL | xargs cp -a --target-dir=$wd/lizardfs -v
+list=$(cat  << EOL
 slack-desc
 doinst.sh
 README
@@ -16,6 +16,8 @@ rc.lizardfs-master.new
 rc.lizardfs-metalogger.new
 rc.lizardfs.new
 EOL
+)
+echo "$list" | xargs cp -a --target-dir=$wd/lizardfs -v
 cd $wd
 
 NEWVERSION=${NEWVERSION:-3.12.0}
@@ -36,11 +38,12 @@ for sbo in lizardfs; do
 		wget --no-check-certificate "$srcurl"
 		MD5SUM=$(md5sum *.gz |cut -d' ' -f1)
 		sed -i.old.md5 "s/^MD5SUM=.*$/MD5SUM=\"$MD5SUM\"/" $sbo.info
-		tar xf *.gz
+		#tar xf *.gz
 		./$sbo.SlackBuild
-		installpkg /tmp/$sbo-*_SBo.$PKGTYPE
+		#installpkg /tmp/$sbo-*_SBo.$PKGTYPE
 	)
-	tar tf $sbo.tar.gz|grep -v /$|tar cvvf - -T -|gzip -9 > /tmp/$sbo.tar.gz
+	#tar tf $sbo.tar.gz|grep -v /$|tar cvvf - -T -|gzip -9 > /tmp/$sbo.tar.gz
+	echo "$list"|tar cvvf - -T -|gzip -9 > /tmp/$sbo.tar.gz
 done
 
 rm -rf $wd /tmp/SBo
