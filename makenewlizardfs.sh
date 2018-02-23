@@ -1,5 +1,6 @@
 #!/bin/bash
 
+startdir=$(pwd)
 set -e
 wd=$(mktemp -d)
 mkdir -pv $wd/lizardfs
@@ -43,6 +44,7 @@ for sbo in lizardfs; do
 		#installpkg /tmp/$sbo-*_SBo.$PKGTYPE
 	)
 	#tar tf $sbo.tar.gz|grep -v /$|tar cvvf - -T -|gzip -9 > /tmp/$sbo.tar.gz
+	cd "$startdir"
 	echo "$list"|tar cvvf - -T -|gzip -9 > /tmp/$sbo.tar.gz
 done
 

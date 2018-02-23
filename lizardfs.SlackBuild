@@ -80,8 +80,8 @@ make install DESTDIR=$PKG
 (cd $PKG/usr/bin; strip lizardfs-admin mfsmount lizardfs)
 
 mv $PKG/usr/share/man $PKG/usr/
-find $PKG/usr/share/man -type f -size +40c -exec xz -1e {} \;
-for i in $( find $PKG/usr/share/man -type l ) ; do ln -s $( readlink $i ).xz $i.xz ; rm $i ; done
+find $PKG/usr/man -type f -size +40c -exec xz -1e {} \;
+for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).xz $i.xz ; rm $i ; done
 
 # Rename default config files to suite Slackware's conventions:
 for d in chunkserver exports goals hdd master metalogger mount topology; do
