@@ -48,4 +48,4 @@ for sbo in lizardfs; do
 	echo "$list"|tar cvvf - -T -|gzip -9 > /tmp/$sbo.tar.gz
 done
 
-rm -rf $wd /tmp/SBo
+rm -rf $wd
