@@ -40,8 +40,8 @@ stop () {
 }
 
 restart () {
-    stop
-    start
+  stop
+  start
 }
 
 case "$1" in

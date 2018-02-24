@@ -60,7 +60,7 @@ set -e # Exit on most errors
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-#rm -rf $PRGNAM-$VERSION
+rm -rf $PRGNAM-$VERSION
 tar xvvf $CWD/v$VERSION.tar.gz
 cd $PRGNAM-$VERSION
 chown -R root:root .
