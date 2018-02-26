@@ -1,41 +1,55 @@
-LizardFS is a GPLv3-licensed implementation of GoogleFS, and a
-live fork of earlier project MooseFS, led by Gemius SA.
+LizardFS is a highly scalable, fault-tolerant, POSIX-compatible, FUSE-based,
+high performance distributed filesystem, licensed under GNU General Public
+License version 3.
 
-One can think of LizardFS as a scalable NFS on steroid, that can be deployed
-on JBOA (Just a Bunch of Anything) - any mixture of workstations/servers (and
-soon also mobile devices), running Linux, BSD, MacOSX, and Windows, will do.
+LizardFS is an implementation of GoogleFS, and a fork of the earlier project,
+MooseFS.  LizardFS supports writable snapshots (instant copies), undeleting
+files, automatic data rebalancing, self-healing, data tiering, periodic data
+patrols and many more.
 
-Moreover it scales very well, as data is replicated point-to-point (just like
-in torrent software) and up to 9 (nine) copies of any chunk of data can be
-specified.  (Number of copies is set at file and directory level).  The system
-balances chunks of files among the machines, ensuring no machine suddenly runs
-out of storage space.  No need for similar machines, no need for similar-sized
-disks, just pick up what left after last power station failure and build a
-bullet-proof system for massive storage out of it!
+LizardFS system consists of a master server, one or more metadata logging
+servers (meta loggers), and many chunk servers, that store the data on their
+locally-attached drives.  Both meta loggers and chunk servers can be added and
+removed without restarting the master server.
 
-Although it is a fairly new project (forked circa 2012), it already has quite
-impressive number of huge installations worldwide, including (but not limited
-to): Harvard University, Mirada.com studios, and more.
+Filesystem metadata is stored on the master server (and constantly replicated
+to meta loggers), whereas filesystem data is divided into chunks and spread as
+files over chunk servers, according to pre-defined 'goals', which can be set
+on file-, directory-, or filesystem level.  A goal can be an n-way mirroring
+goal, n+1 xor-ed goal (each chunk divided into n parts and xor-ed to calculate
+one part of redundancy), or more sophisticated, erasure code based n+k
+redundancy, where n parts of each chunk are backed by k parts of redundancy
+data.
 
-LizardFS system consists of:
-- managing server - single computer managing the whole filesystem,
-- meta-loggers - one or more backup machines for master server,
-- any number of data servers.
+A set of administrative commands exists to support querying and setting
+redundancy goals and trash preservation time.  LizardFS is admin-friendly since
+any missing chunks can be provided from any sort of backup to any running
+chunk server.
 
-Master server must be POSIX compliant (Linux, BSD, OSX, Windows+Cygwin etc.)
-and should be as good as budget permits.  Lots of RAM?  Yes, ECC.  SSDrives?
-Sure, RAID+BBU controlled.  Network card? 10Gbps interfaces, bonded together.
-Despite of beeing benchmark-crusher, it should not perform any unneeded
-activity whatsoever, as it could become a SPoF.
+This package contains all binaries needed to run LizardFS system: mfsmaster,
+mfsmetalogger, mfschunkserver, as well as lizardfs-cgiserver (web-based
+monitoring console).
 
-Therefore at least one meta-logger should be deployed.  In order to be a quick
-drop-in replacement, meta-loggers should be fairly decent machines as well.
+You need an "mfs" user and group prior to building lizardfs.  Something like
+this will suffice for most systems:
+  groupadd -g 353 mfs
+  useradd -u 353 -g 353 -d /var/lib/mfs mfs
+Feel free to use a different uid and gid if desired, but 353 is recommended to
+avoid conflicts with other stuff from SlackBuilds.org.
 
-The actual storage for one's precious data however, can be the last sort of
-what merely resembles contemporary computers, as chunkserver process hardly
-saturates one procesor core, even under full load.  Moreover chunkservers can
-act as any type of what-you-need, utilizing (having mounted) filesystem they
-are actually backing, being distributed webservers or even office space
-workstations.
+It is also advisable to make name 'mfsmaster' pointing at your Master server
+across your network.  It is not strictly required, but it will make things much
+easier.  If you are unable to configure DNS server, adding this line to
+/etc/hosts on each master, metalogger, chunkserver, and client machines will
+do:
 
-Project home page: http://lizardfs.org/
+a.b.c.d    mfsmaster    mfsmaster.my-domain.ext
+
+where a.b.c.d is an IP address of your master server.
+
+Then on each node add `/etc/rc.d/rc.lizardfs start' to /etc/rc.d/rc.local (or
+wherever you find appropriate), and use `/etc/rc.d/rc.lizardfs setup' to
+configure which services should run on the server.  Since most installations
+consists mostly of chunkservers, rc.lizardfs-chunkserver is marked executable
+by default (but will not run until rc.lizardfs-chunkserver or rc.lizardfs is
+added to rc.local, so no need to worry).

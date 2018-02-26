@@ -23,9 +23,12 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=lizardfs
-VERSION=${VERSION:-3.10.0}
+VERSION=${VERSION:-3.12.0}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
+
+LIZARDFS_UID=${LIZARDFS_UID:-353}
+LIZARDFS_GID=${LIZARDFS_GID:-353}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -40,6 +43,19 @@ CWD=$(pwd)
 TMP=${TMP:-/tmp/SBo}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
+
+# Bail out if user or group isn't valid on your system
+# For slackbuilds.org, assigned mfs uid/gid are 353/353
+# See http://slackbuilds.org/uid_gid.txt
+if ! grep ^mfs: /etc/group 2>&1 > /dev/null; then
+  echo "  You must have a mfs group to run this script."
+  echo "    # groupadd -g $LIZARDFS_GID mfs"
+  exit 1
+elif ! grep ^mfs: /etc/passwd 2>&1 > /dev/null; then
+  echo "  You must have a mfs user to run this script."
+  echo "    # useradd -u $LIZARDFS_UID -g $LIZARDFS_GID -d /var/lib/pgsql mfs"
+  exit 1
+fi
 
 if [ "$ARCH" = "i486" ]; then
   SLKCFLAGS="-O2 -march=i486 -mtune=i686"
