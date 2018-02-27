@@ -21,7 +21,7 @@ start () {
   echo -n $"Starting $prog: "
   daemon --user $MFSCGISERV_USER $prog >/dev/null 2>&1
   RETVAL=$?
-  if [[ $RETVAL -eq 0 ]]; then
+  if [ $RETVAL -eq 0 ]; then
     touch /var/lock/subsys/$prog
     echo '...done'
   else
@@ -34,10 +34,10 @@ stop () {
   echo -n $"Stopping $prog: "
   $prog stop >/dev/null 2>&1 || killproc $prog >/dev/null 2>&1
   RETVAL=$?
-  if [[ $RETVAL -eq 0 ]]; then
+  if [ $RETVAL -eq 0 ]; then
     rm -f /var/lock/subsys/$prog
   fi
-  echo ..done
+  echo '...done'
   return $RETVAL
 }
 

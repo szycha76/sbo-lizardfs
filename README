@@ -39,7 +39,7 @@ avoid conflicts with other stuff from SlackBuilds.org.
 
 It is also advisable to make name 'mfsmaster' pointing at your Master server
 across your network.  It is not strictly required, but it will make things much
-easier.  If you are unable to configure DNS server, adding this line to
+easier.  If you are unable to configure your DNS server, adding this line to
 /etc/hosts on each master, metalogger, chunkserver, and client machines will
 do:
 
@@ -47,8 +47,8 @@ a.b.c.d    mfsmaster    mfsmaster.my-domain.ext
 
 where a.b.c.d is an IP address of your master server.
 
-Then on each node add `/etc/rc.d/rc.lizardfs start' to /etc/rc.d/rc.local (or
-wherever you find appropriate), and use `/etc/rc.d/rc.lizardfs setup' to
+Then on each node add '/etc/rc.d/rc.lizardfs start' to /etc/rc.d/rc.local (or
+wherever you find appropriate), and use '/etc/rc.d/rc.lizardfs setup' to
 configure which services should run on the server.  Since most installations
 consists mostly of chunkservers, rc.lizardfs-chunkserver is marked executable
 by default (but will not run until rc.lizardfs-chunkserver or rc.lizardfs is

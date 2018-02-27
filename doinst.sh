@@ -10,8 +10,6 @@ config() {
   fi
   # Otherwise, we leave the .new copy for the admin to consider...
 }
-mkdir -pv /var/run/mfs /var/lib/mfs
-chown -v mfs:mfs /var/run/mfs /var/lib/mfs
 
 config etc/mfs/mfschunkserver.cfg.new
 config etc/mfs/mfshdd.cfg.new

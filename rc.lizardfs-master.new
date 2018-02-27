@@ -10,7 +10,7 @@
 RETVAL=0
 prog="mfsmaster"
 
-if [[ ! -r "/etc/mfs/mfsexports.cfg" ]]; then
+if [ ! -r "/etc/mfs/mfsexports.cfg" ]; then
   echo $prog will not run: /etc/mfs/mfsexports.cfg file is missing
   exit 1
 fi
@@ -19,7 +19,7 @@ start () {
   echo -n $"Starting $prog: "
   daemon $prog >/dev/null 2>&1
   RETVAL=$?
-  if [[ $RETVAL -eq 0 ]]; then
+  if [ $RETVAL -eq 0 ]; then
     touch /var/lock/subsys/$prog
     echo '...done'
   else
@@ -32,10 +32,10 @@ stop () {
   echo -n $"Stopping $prog: "
   $prog stop >/dev/null 2>&1 || killproc $prog >/dev/null 2>&1
   RETVAL=$?
-  if [[ $RETVAL -eq 0 ]]; then
+  if [ $RETVAL -eq 0 ]; then
     rm -f /var/lock/subsys/$prog
   fi
-  echo ..done
+  echo '...done'
   return $RETVAL
 }
 

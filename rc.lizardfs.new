@@ -28,12 +28,12 @@ services="master cgiserv metalogger chunkserver"
 function everyone() {
   action="$1"
 
-  if [[ "$action" == "stop" ]]; then
+  if [ "$action" = "stop" ]; then
     local services="$(echo $services|tr ' ' "\n"|tac)"
   fi
 
   for svc in $services; do
-    if [[ -x /etc/rc.d/rc.lizardfs-$svc ]]; then
+    if [ -x /etc/rc.d/rc.lizardfs-$svc ]; then
       /etc/rc.d/rc.lizardfs-$svc $action
     fi
   done
