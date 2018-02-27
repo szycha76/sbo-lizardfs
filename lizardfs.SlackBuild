@@ -132,29 +132,3 @@ cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
-
-
-exit
-
-# Last 38 lines contain these Slackware-sepecific scripts:
-
-# -rwxr-xr-x root/root      2510 2016-08-05 03:38 var/log/setup/setup.lizardfs-services.new
-# -rw-r--r-- root/root      1218 2016-08-05 03:29 etc/rc.d/rc.lizardfs-cgiserv.new
-# -rwxr-xr-x root/root      1438 2016-08-05 03:46 etc/rc.d/rc.lizardfs-chunkserver.new
-# -rw-r--r-- root/root      1160 2016-08-05 03:33 etc/rc.d/rc.lizardfs-master.new
-# -rw-r--r-- root/root      1239 2016-08-05 03:41 etc/rc.d/rc.lizardfs-metalogger.new
-# -rw-r--r-- root/root      1748 2016-08-05 03:38 etc/rc.d/rc.lizardfs.new
-
-
-
-
-
-   setup.lizardfs-services.new
-
-   rc.lizardfs-cgiserv.new
-   rc.lizardfs-chunkserver.new
-   rc.lizardfs-master.new
-   rc.lizardfs-metalogger.new
-   rc.lizardfs.new
-   setup.lizardfs-services.new
-
