@@ -33,14 +33,14 @@ for sbo in lizardfs; do
 	#curl -# --insecure $sbourl/$slackver/system/$sbo.tar.gz > $sbo.tar.gz && tar xf $sbo.tar.gz || echo no $sbo.tar.gz found
 	(
 		cd $sbo
-		VERSION=$(grep ^VERSION= $sbo.info|cut -d'"' -f2|sed 's:\.:\\.:g')
+		VERSION=$(grep ^VERSION= $sbo.info|cut -d'"' -f2|sed 's:\.:.:g')
 		sed -i.old s/$VERSION/$NEWVERSION/g $sbo.info $sbo.SlackBuild
-		srcurl=$(grep DOWNLOAD= $sbo.info|cut -d'"' -f2)
-		wget --no-check-certificate "$srcurl"
+		srcurl=$(source $sbo.info; echo $DOWNLOAD)
+		wget --no-check-certificate $srcurl
 		MD5SUM=$(md5sum *.gz |cut -d' ' -f1)
 		sed -i.old.md5 "s/^MD5SUM=.*$/MD5SUM=\"$MD5SUM\"/" $sbo.info
 		#tar xf *.gz
-		./$sbo.SlackBuild
+		. ./$sbo.SlackBuild
 		#installpkg /tmp/$sbo-*_SBo.$PKGTYPE
 	)
 	#tar tf $sbo.tar.gz|grep -v /$|tar cvvf - -T -|gzip -9 > /tmp/$sbo.tar.gz
