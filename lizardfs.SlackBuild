@@ -131,6 +131,9 @@ cp -a $CWD/rc.lizardfs-cgiserv.new $CWD/rc.lizardfs-chunkserver.new \
 mkdir -p $PKG/var/log/setup
 cp -a $CWD/setup.lizardfs-services.new $PKG/var/log/setup/
 
+chmod +x $PKG/var/log/setup/setup.lizardfs-services.new \
+  $PKG/etc/rc.d/rc.lizardfs-chunkserver.new
+
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a \
   COPYING INSTALL NEWS README.md UPGRADE ReleaseNotes \
