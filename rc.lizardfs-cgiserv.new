@@ -15,11 +15,11 @@
 MFSCGISERV_USER=nobody
 
 RETVAL=0
-prog="mfscgiserv"
+prog="lizardfs-cgiserver"
 
 start () {
   echo -n $"Starting $prog: "
-  daemon --user $MFSCGISERV_USER $prog >/dev/null 2>&1
+  /bin/su -s /bin/bash -c "/usr/sbin/$prog > /dev/null 2>&1 &" $MFSCGISERV_USER
   RETVAL=$?
   if [ $RETVAL -eq 0 ]; then
     touch /var/lock/subsys/$prog
@@ -32,7 +32,7 @@ start () {
 
 stop () {
   echo -n $"Stopping $prog: "
-  $prog stop >/dev/null 2>&1 || killproc $prog >/dev/null 2>&1
+  fuser -kn tcp 9425 >/dev/null 2>&1
   RETVAL=$?
   if [ $RETVAL -eq 0 ]; then
     rm -f /var/lock/subsys/$prog
